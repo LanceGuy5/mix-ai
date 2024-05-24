@@ -1,0 +1,23 @@
+// src/types/spectro.d.ts
+declare module 'spectro' {
+    interface ColorMap {
+        [key: string]: string;
+    }
+
+    interface SpectroOptions {
+        overlap?: number;
+        wFunc?: string;
+    }
+
+    interface Spectro {
+        on(event: 'data', callback: (err: any, frame: any) => void): void;
+        on(event: 'end', callback: (err: any, data: any) => void): void;
+        stop(): void;
+    }
+
+    export function colorize(colorMap: ColorMap): (intensity: number) => [number, number, number];
+
+    const spectro: (options: SpectroOptions) => Spectro;
+
+    export = spectro;
+}

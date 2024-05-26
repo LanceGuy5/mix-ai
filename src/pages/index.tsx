@@ -6,7 +6,7 @@ const testOne = async () => {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ songs: ['sound1.wav'] })
+    body: JSON.stringify({ songs: ['sound1.wav', 'sound2.wav'] })
   })
   const data = await res.json()
   console.log(data)

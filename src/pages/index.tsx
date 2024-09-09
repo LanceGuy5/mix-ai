@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 const testOne = async () => {
   const res = await fetch('/api/mix', {
     method: 'POST',

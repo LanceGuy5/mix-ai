@@ -1,16 +1,15 @@
-import { ConvertSongsToSpectrographs } from "./Audio";
-
+import { ConvertSongsToSpectrographs } from './Audio';
 
 /**
  * Given a list of song names, download songs as local audio files
- * @param songs 
+ * @param songs
  * @returns List of successfully downloaded songs
  */
 export const DownloadSongs = async (songs: string[]): Promise<string[]> => {
-    return songs.map((song) => {
-        return `Downloaded ${song}`;
-    });
-}
+  return songs.map((song) => {
+    return `Downloaded ${song}`;
+  });
+};
 
 /**
  * Given a list of file paths, produce spectrographs/feed into Transformer.tsx
@@ -19,9 +18,9 @@ export const DownloadSongs = async (songs: string[]): Promise<string[]> => {
  * @returns Mixed audio file
  */
 export const MixSongs = async (songs: string[]): Promise<string> => {
-    if (ConvertSongsToSpectrographs(songs) !== null) {
-        return "Error in converting songs to spectrographs";
-    }
+  if (ConvertSongsToSpectrographs(songs) !== null) {
+    return 'Error in converting songs to spectrographs';
+  }
 
-    return songs.join(" + ");
-}
+  return songs.join(' + ');
+};

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write --ignore-path .gitignore .",
+    "format:check": "prettier --check --ignore-path .gitignore ."
   },
   "dependencies": {
     "next": "14.2.3",
@@ -21,11 +23,14 @@
     "@types/pngjs": "^6.0.5",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "autoprefixer": "^10.4.19",
+    "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.3",
+    "eslint-config-prettier": "^9.1.0",
+    "postcss": "^8.4.45",
+    "prettier": "3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.6",
+    "tailwindcss": "^3.4.10",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5"
   }

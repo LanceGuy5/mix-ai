@@ -1,4 +1,1 @@
-
-export function Transformer() {
-
-}
+export function Transformer() {}

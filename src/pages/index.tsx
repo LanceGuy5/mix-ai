@@ -1,3 +1,6 @@
+import FormBox from '@/components/ui/FormBox';
+import Head from 'next/head';
+
 const testOne = async () => {
   const res = await fetch('/api/mix', {
     method: 'POST',
@@ -12,13 +15,23 @@ const testOne = async () => {
 
 export default function Home() {
   return (
-    <main className='flex min-h-screen flex-col items-center justify-between p-24'>
-      <button
-        className='rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700'
-        onClick={() => testOne()}
-      >
-        Test
-      </button>
-    </main>
+    <>
+      <Head>
+        <title>mix-ai</title>
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
+      <header>
+        <div className='flex flex-col items-center'>
+          <h1 className='text-title text-white'>mix-ai</h1>
+          <p className='font-consolas font-thin text-white'>
+            ❤️ from CS @ UPenn 😊
+          </p>
+        </div>
+      </header>
+
+      <main>
+        <FormBox />
+      </main>
+    </>
   );
 }

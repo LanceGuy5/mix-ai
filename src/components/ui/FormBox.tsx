@@ -22,17 +22,17 @@ export default function FormBox() {
   };
 
   return (
-    <div className="form-box">
+    <div className='form-box'>
       <input
-        type="text"
+        type='text'
         value={playlistId}
         onChange={(e) => setPlaylistId(e.target.value)}
-        placeholder="Enter playlist ID"
-        className="mr-4 rounded border px-4 py-2"
+        placeholder='Enter playlist ID'
+        className='mr-4 rounded border px-4 py-2'
       />
       <button
         onClick={handleSubmit}
-        className="rounded bg-blue-500 px-4 py-2 font-bold text-white transition-colors duration-300 hover:bg-blue-700"
+        className='rounded bg-blue-500 px-4 py-2 font-bold text-white transition-colors duration-300 hover:bg-blue-700'
       >
         Submit
       </button>

@@ -10,12 +10,12 @@ const GetPlaylistWithURL = async (
   scdl
     .downloadPlaylist(SOUNDCLOUD_URL)
     .then(async (stream: [NodeJS.ReadableStream[], String[]]) => {
-        const writePromises = stream[0].map((inputStream, index) => {
+      const writePromises = stream[0].map((inputStream, index) => {
         const fileName = `songs/${stream[1][index]}_${uuidv4()}.mp3`;
         console.log('[DEBUG] writing to audio file: ' + fileName);
         return finishWrittenStream(inputStream, fileName)
           .then(() => console.log('[DEBUG] FINISHED: ' + stream[1][index]))
-          .catch(err => console.log('[DEBUG] ERROR: ' + err));
+          .catch((err) => console.log('[DEBUG] ERROR: ' + err));
       });
       await Promise.all(writePromises);
     })

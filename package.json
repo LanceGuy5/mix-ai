@@ -9,7 +9,7 @@
     "lint": "next lint",
     "format": "prettier --write --ignore-path .gitignore .",
     "format:check": "prettier --check --ignore-path .gitignore .",
-    "backend": "cd backend && python app.py"
+    "backend": "python backend/app.py"
   },
   "dependencies": {
     "next": "14.2.3",

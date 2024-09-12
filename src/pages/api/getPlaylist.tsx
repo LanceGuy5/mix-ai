@@ -1,23 +1,26 @@
 import scdl from 'node-fetch-sd';
-import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
+import { finishWrittenStream } from '@/lib/utils';
 
 const GetPlaylistWithURL = async (
   req: any,
   res: any
 ): Promise<{ status: number; message: string }> => {
-  const SOUNDCLOUD_URL = `https://soundcloud.com/lance-hartman-129699056/sets/random/s-gKjL1NhvLie?si=d87af33719894805a2a8c565168d79d1&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing`;
+  const SOUNDCLOUD_URL = req.body.url;
   scdl
     .downloadPlaylist(SOUNDCLOUD_URL)
-    .then((stream: [NodeJS.ReadableStream[], String[]]) => {
-      for (let i = 0; i < stream[0].length; i++) {
-        console.log('writing to audio file: ' + stream[1][i]);
-        stream[0][i].pipe(
-          fs.createWriteStream(`songs/${stream[1][i]}_${uuidv4()}.mp3`)
-        );
-      }
+    .then(async (stream: [NodeJS.ReadableStream[], String[]]) => {
+        const writePromises = stream[0].map((inputStream, index) => {
+        const fileName = `songs/${stream[1][index]}_${uuidv4()}.mp3`;
+        console.log('[DEBUG] writing to audio file: ' + fileName);
+        return finishWrittenStream(inputStream, fileName)
+          .then(() => console.log('[DEBUG] FINISHED: ' + stream[1][index]))
+          .catch(err => console.log('[DEBUG] ERROR: ' + err));
+      });
+      await Promise.all(writePromises);
     })
     .then(() => {
+      console.log('[DEBUG] FINISHED WRITING ALL FILES');
       return { status: 200, message: 'success' };
     })
     .catch(() => {

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
@@ -6,9 +6,9 @@ app = Flask(__name__)
 def index():
     return "Hello, World!"
 
-@app.route("/backend", methods=['GET'])
+@app.route("/backend/test", methods=['GET'])
 def hello():
-    return "Hello, World!"
+    return jsonify("Hello, World!")
 
 # everything is hosted @ https://127.0.0.1:5000/...
 if __name__ == "__main__":

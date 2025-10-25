@@ -1,6 +1,5 @@
 // /pages/api/getPlaylist.ts
 import scdl from 'soundcloud-downloader';
-import { v4 as uuidv4 } from 'uuid';
 import { toNodeReadable } from '@/lib/utils';
 import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
@@ -90,7 +89,7 @@ export default async function handler(req: any, res: any) {
       const title = t.title ?? `track_${t.id}`;
       const outPath = path.join(
         SONGS_DIR,
-        `${sanitize(title)}_${uuidv4()}.wav`
+        `${sanitize(title)}.wav`
       );
 
       try {

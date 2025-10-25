@@ -16,10 +16,10 @@ const testBackend = async () => {
     method: 'GET',
     // url: `${process.env.BACKEND_URL}/backend/test`
     url: `http://127.0.0.1:5000/backend/test`,
-    data: {}
+    data: {},
   });
   return value;
-}
+};
 
 export default function FormBox() {
   const [playlistId, setPlaylistId] = useState('');
@@ -34,7 +34,7 @@ export default function FormBox() {
   const handleBackendTest = async () => {
     const result = await testBackend();
     console.log(result);
-  }
+  };
 
   return (
     <div className='form-box'>

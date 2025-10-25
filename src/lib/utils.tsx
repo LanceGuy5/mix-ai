@@ -15,7 +15,7 @@ const finishWrittenStream = (
 
 const toNodeReadable = (webStream: NodeJS.ReadableStream): Readable => {
   const nodeStream = new Readable({
-    read() { },
+    read() {},
   });
 
   webStream.on('data', (chunk) => nodeStream.push(chunk));

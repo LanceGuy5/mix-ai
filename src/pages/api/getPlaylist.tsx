@@ -1,8 +1,8 @@
-import scdl from 'node-fetch-sd';
+ import scdl from 'node-fetch-sd';
 import { v4 as uuidv4 } from 'uuid';
 import { toNodeReadable } from '@/lib/utils';
-import ffmpeg from 'fluent-ffmpeg'
-import fs from 'fs'
+import ffmpeg from 'fluent-ffmpeg';
+import fs from 'fs';
 
 const GetPlaylistWithURL = async (
   req: any,
@@ -14,49 +14,57 @@ const GetPlaylistWithURL = async (
     return { status: 400, message: 'no_url_provided' };
   }
 
-  scdl
-    .downloadPlaylist(SOUNDCLOUD_URL)
-    .then(async (stream: [NodeJS.ReadableStream[], String[]]) => {
+  try {
+    const stream = await scdl.downloadPlaylist(SOUNDCLOUD_URL);
 
-      const writePromises = stream[0].map(async (inputStream, index) => {
-        const nodeStream = await toNodeReadable(inputStream);
-        const fileName = `songs/${stream[1][index]}_${uuidv4()}`;
-        console.log('[DEBUG] Writing to:', fileName);
+    // stream[0] = array of ReadableStreams
+    // stream[1] = array of track titles
+    const writePromises = stream[0].map(async (inputStream, index) => {
+      const nodeStream = await toNodeReadable(inputStream);
+      const title = stream[1][index];
+      const fileName = `songs/${title}_${uuidv4()}`;
+      const outputPath = `${fileName}.wav`;
 
-        return new Promise((resolve, reject) => {
-          const outputFile = fs.createWriteStream(`${fileName}.wav`);
+      console.log('[DEBUG] Converting:', title);
 
-          ffmpeg()
-            .input(nodeStream)
-            .inputFormat('mp3') // Convert MP3 if needed
-            .toFormat('wav') // Output WAV
-            .on('end', () => {
-              console.log('[DEBUG] Conversion complete:', fileName);
-              resolve(fileName);
-            })
-            .on('error', (err) => {
-              console.error('[DEBUG] ERROR:', err);
-              reject(err);
-            })
-            .pipe(outputFile, { end: true });
-        });
+      return new Promise((resolve, reject) => {
+        const outputFile = fs.createWriteStream(outputPath);
+
+        ffmpeg(nodeStream)
+          // let ffmpeg auto-detect input format
+          .toFormat('wav')
+          .addOption('-loglevel', 'error') // set to 'debug' if you want verbose ffmpeg output
+          .on('start', (cmd) => {
+            console.log('[DEBUG] ffmpeg started:', cmd);
+          })
+          .on('progress', (progress) => {
+            console.log(`[DEBUG] Processing ${title}: ${progress.percent?.toFixed(2)}%`);
+          })
+          .on('end', () => {
+            console.log('[DEBUG] Conversion complete:', fileName);
+            resolve(fileName);
+          })
+          .on('error', (err) => {
+            console.error('[DEBUG] ffmpeg error:', err.message);
+            reject(err);
+          })
+          .pipe(outputFile, { end: true });
       });
-      await Promise.all(writePromises);
-    })
-    .then(() => {
-      console.log('[DEBUG] FINISHED WRITING ALL FILES');
-      return { status: 200, message: 'success' };
-    })
-    .catch(() => {
-      return { status: 500, message: 'stream_error' };
     });
-  return { status: 200, message: 'error' };
+
+    await Promise.all(writePromises);
+    console.log('[DEBUG] FINISHED WRITING ALL FILES');
+    return { status: 200, message: 'success' };
+
+  } catch (err) {
+    console.error('[DEBUG] Playlist download or conversion failed:', err);
+    return { status: 500, message: 'stream_error' };
+  }
 };
 
 const handler = async (req: any, res: any): Promise<any> => {
   if (req.method === 'POST') {
-    const result: { status: number; message: string } =
-      await GetPlaylistWithURL(req, res);
+    const result = await GetPlaylistWithURL(req, res);
     res.status(result.status).send(result.message);
   } else {
     res.status(405).send('Method Not Allowed');
